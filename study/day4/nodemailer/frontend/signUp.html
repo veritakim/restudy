@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <title>회원가입</title>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+    function buttonPush () {
+      const myphone = document.getElementById("phoneNumber").value
+      console.log("핸드폰 번호는: ", myphone);
+
+      // 인증번호 api 요청
+      axios.post("http://localhost:3000/tokens/phone", {
+        myphone: myphone
+      }).then((res) => {
+        // response가 들어옴
+        console.log(res)
+        // alert(res.data)
+        const result = document.createTextNode(res.data);
+        // document.getElementById("result").innerText = res.data
+        document.getElementById("result").appendChild(result)
+      })
+
+    }
+  </script>
+</head>
+<body>
+  휴대번호 : <input type="text" id="phoneNumber"> <button onclick="buttonPush()">인증하기</button>  
+  <div id="result">인증상태 : </div>
+  
+  <button>회원가입하기</button>
+</body>
+</html>
