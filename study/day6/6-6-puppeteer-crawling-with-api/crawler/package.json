@@ -1,0 +1,11 @@
+{
+  "name": "6-4-puppeteer",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "mongoose": "^7.5.0",
+    "puppeteer": "^21.1.1"
+  }
+}
