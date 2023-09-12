@@ -65,4 +65,4 @@ UPDATE product
 
 SELECT p.id, p.name, p.price, pc.name
   from product p, product_category pc
-where p.productCategoryId  = pc.id ;
+ where p.productCategoryId  = pc.id ;
