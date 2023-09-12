@@ -1,0 +1,68 @@
+show databases;
+
+use myproject05;
+
+show tables;
+
+desc product;
+
+
+select *
+  from product;
+
+INSERT into product(id, name, description, price, isSoldout)
+	values(uuid(),"마우스", "재빠른 마우스입니다.", 10000, false);
+
+
+INSERT into product(id, name, description, price, isSoldout)
+	values(uuid(),"노트북", "고사양 최신 노트북임", 25000, false);
+
+
+ SELECT *
+ from product_saleslocation ps
+;
+
+
+INSERT into product_saleslocation(id, address, addressDetail, lat, lng, meetingTime)
+	values(uuid(),"마포구", "연희 3로", "0.0", "0.1", "2023-09-12")
+;
+
+UPDATE product 
+   set price = 18000
+   where id = "56387f98-515e-11ee-a70d-b40b185b7f6d"
+;  
+
+UPDATE product 
+	set productSaleslocationId = "1a8e0d2c-515f-11ee-a70d-b40b185b7f6d"
+where id = "56387f98-515e-11ee-a70d-b40b185b7f6d"
+;
+
+
+SELECT p.id, p.name, p.price, ps.address, ps.addressDetail
+ FROM product as p, product_saleslocation as ps 
+where p.productSaleslocationId = ps.id
+;
+
+
+UPDATE product 
+   set isSoldout = TRUE 
+ WHERE name = "노트북"
+  	and price = 25000;
+
+
+UPDATE product 
+ set price = 5000
+ where name = "노트북" 
+    or name = "키보드"
+ ;
+
+
+UPDATE product 
+	set productCategoryId = "c7d2c372-5161-11ee-a70d-b40b185b7f6d"
+	where name = "마우스"
+	   or name = "노트북"
+;
+
+SELECT p.id, p.name, p.price, pc.name
+  from product p, product_category pc
+where p.productCategoryId  = pc.id ;
