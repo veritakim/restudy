@@ -3,11 +3,15 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { BoardsModule } from './api/products/products.service';
+import { BoardsModule } from './apis/boards/boards.module';
+import { ProductModule } from './apis/products/product.module';
+import { ProductCategoryModule } from './apis/productsCategories/productCategory.module';
 
 @Module({
   imports: [
     BoardsModule,
+    ProductModule,
+    ProductCategoryModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -22,7 +26,7 @@ import { BoardsModule } from './api/products/products.service';
       username: process.env.DATABASE_USERNAME,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_DATABASE,
-      entities: [__dirname + '/api/**/*.entity.*'],
+      entities: [__dirname + '/apis/**/*.entity.*'],
       synchronize: true,
       logging: true,
     }),
