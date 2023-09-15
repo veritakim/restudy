@@ -16,4 +16,10 @@ export class CreateProductInput {
 
   @Field(() => ProductSalesLocationInput)
   productSalesLocation: ProductSalesLocationInput;
+
+  @Field(() => String)
+  productCategoryId: string;
+
+  @Field(() => [String])
+  productTags: string[];
 }
