@@ -17,7 +17,6 @@ export class UsersResolver {
     @Args({ name: 'age', type: () => Int }) age: number,
   ) {
     const hashedPassword = await bcrypt.hash(password, 10.2);
-    console.log('해쉬드패스워드 : ', hashedPassword);
     return this.usersService.create({ email, hashedPassword, name, age });
   }
 }
