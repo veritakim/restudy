@@ -1,0 +1,62 @@
+get http://localhost:9200
+
+post  http://localhost:9200/myboard/_doc/1
+body json 
+{
+  "title": "제목입니다",
+  "contents": "내용입니다"  
+}
+
+get http://localhost:9200/myboard/_search
+
+delete http://localhost:9200/myboard
+
+post http://localhost:9200/myproduct04/_doc/1
+body json
+{
+    "name": "애플키보드",
+    "description": "안녕하세요. Apple에서 나온 감성적인 Keyboard 판매합니다!!", // 대문자, 띄어쓰기 
+    "price": 30000
+}
+
+http://localhost:9200/myproduct04/_doc/3
+{
+    "name": "기계식키보드",
+    "description": "기계식 키보드 오늘만 특가!!",
+    "price": 2000
+}
+
+
+get http://localhost:9200/myproduct04/_doc/1
+get http://localhost:9200/myproduct04/_search
+
+put http://localhost:9200/myproduct04/_doc/3
+{
+    "name": "기계식키보드(청축)",
+    "description": "기계식 키보드 오늘만 특가!!",
+    "price": 3000
+}
+
+
+
+// 조회
+post http://localhost:9200/myproduct04/_search
+body json
+{
+    "query": {
+        "match": {
+            "description": "Best"
+        }
+    }
+}
+
+// Bestshop으로 검색하면 아무것도 나오지 않는다.
+{
+    "query": {
+        "match": {
+            "description": "Bestshop"
+        }
+    }
+}
+
+=> Elasticsearch의 특징
