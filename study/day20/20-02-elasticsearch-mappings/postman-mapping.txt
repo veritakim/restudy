@@ -1,0 +1,100 @@
+# mapping 시키기
+put http://localhost:9200/myproduct0444/_mappings
+
+{
+    "properties": {
+        "name": {
+            "type": "text"
+        },
+        "description": {
+            "type": "text",
+            "analyzer": "my_ngram_analyzer"
+        },
+        "price": {
+            "type": "long"
+        }
+    }
+}
+
+{
+    "acknowledged": true
+}
+
+# 조회해보기
+get http://localhost:9200/myproduct0444/_mappings
+
+{
+    "myproduct0444": {
+        "mappings": {
+            "properties": {
+                "description": {
+                    "type": "text",
+                    "analyzer": "my_ngram_analyzer"
+                },
+                "name": {
+                    "type": "text"
+                },
+                "price": {
+                    "type": "long"
+                }
+            }
+        }
+    }
+}
+
+# 기존에 만들어진 mapping은 수정 불가 그렇지만 추가는 가능하다
+put http://localhost:9200/myproduct0444/_mappings
+
+{
+    "properties": {
+        "name": {
+            "type": "text"
+        },
+        "description": {
+            "type": "text",
+            "analyzer": "my_ngram_analyzer"
+        },
+        "price": {
+            "type": "long"
+        },
+        "writer": {
+            "type": "text"
+        }
+
+    }
+}
+
+# 상품 등록해보기
+post http://localhost:9200/myproduct0444/_doc/1
+
+{
+    "name": "최신마우스",
+    "description": "안녕하세요. Bestshop입니다. 국내 최고 Best 상품만 판매합니다!",
+    "price": 10000,
+    "writer": "김철수"
+}
+
+
+# 검색해보기
+post http://localhost:9200/myproduct0444/_search
+{
+    "query": {
+        "match": {
+            "description": "Bestshop"
+        }
+    }
+}
+
+
+# nGram을 적용하지 않고 첫글자가 최인것 검색하기
+{
+    "query": {
+        "bool": {
+            "should": [
+                {
+                    "prefix": {"name": "최"}
+                }
+            ]
+        }
+    }
+}

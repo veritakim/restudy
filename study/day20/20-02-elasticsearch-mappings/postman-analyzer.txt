@@ -1,0 +1,132 @@
+post http://localhost:9200/myproduct04/_analyze
+
+# 기본은 standard
+## 소문자로 변경된다. 
+{
+    "analyzer": "standard",
+    "text": "안녕하세요. Bestshop입니다! Best"
+}
+
+// => send
+
+{
+    "tokens": [
+        {
+            "token": "안녕하세요",
+            "start_offset": 0,
+            "end_offset": 5,
+            "type": "<HANGUL>",
+            "position": 0
+        },
+        {
+            "token": "bestshop입니다",
+            "start_offset": 7,
+            "end_offset": 18,
+            "type": "<ALPHANUM>",
+            "position": 1
+        },
+        {
+            "token": "best",
+            "start_offset": 20,
+            "end_offset": 24,
+            "type": "<ALPHANUM>",
+            "position": 2
+        }
+    ]
+}
+
+# whitespace 
+## 띄어쓰기를 기준으로 검색된다
+{
+    "analyzer": "whitespace",
+    "text": "안녕하세요. Bestshop입니다! Best"
+}
+
+{
+    "tokens": [
+        {
+            "token": "안녕하세요.",
+            "start_offset": 0,
+            "end_offset": 6,
+            "type": "word",
+            "position": 0
+        },
+        {
+            "token": "Bestshop입니다!",
+            "start_offset": 7,
+            "end_offset": 19,
+            "type": "word",
+            "position": 1
+        },
+        {
+            "token": "Best",
+            "start_offset": 20,
+            "end_offset": 24,
+            "type": "word",
+            "position": 2
+        }
+    ]
+}
+
+
+# keyword
+## 전체의 문장을 하나의 단어로 인식한다.
+{
+    "analyzer": "keyword",
+    "text": "안녕하세요. Bestshop입니다! Best"
+}
+
+{
+    "tokens": [
+        {
+            "token": "안녕하세요. Bestshop입니다! Best",
+            "start_offset": 0,
+            "end_offset": 24,
+            "type": "word",
+            "position": 0
+        }
+    ]
+}
+
+
+# Snowball
+# ~ing, s등을 제거하고 토큰으로 만들어진다
+{
+    "analyzer": "snowball",
+    "text": "안녕하세요. Bestshop입니다! Best going"
+}
+
+{
+    "tokens": [
+        {
+            "token": "안녕하세요",
+            "start_offset": 0,
+            "end_offset": 5,
+            "type": "<HANGUL>",
+            "position": 0
+        },
+        {
+            "token": "bestshop입니다",
+            "start_offset": 7,
+            "end_offset": 18,
+            "type": "<ALPHANUM>",
+            "position": 1
+        },
+        {
+            "token": "best",
+            "start_offset": 20,
+            "end_offset": 24,
+            "type": "<ALPHANUM>",
+            "position": 2
+        },
+        {
+            "token": "go",
+            "start_offset": 25,
+            "end_offset": 30,
+            "type": "<ALPHANUM>",
+            "position": 3
+        }
+    ]
+}
+
+

@@ -1,0 +1,1493 @@
+put http://localhost:9200/myproduct0444
+
+body raw > json
+
+{
+    "settings": {
+        "analysis": {
+            "analyzer": {
+                "my_ngram_analyzer": {
+                    "tokenizer": "my_ngram_tokenizer"
+                }
+            },
+            "tokenizer": {
+                "my_ngram_tokenizer": {
+                    "type": "nGram",
+                    "min_gram": "1",
+                    "max_gram": "10"
+                }
+            }
+        },
+        "max_ngram_diff": "10"
+    }
+}
+
+## 확인하기 
+get http://localhost:9200/myproduct0444/_settings
+{
+    "myproduct0444": {
+        "settings": {
+            "index": {
+                "max_ngram_diff": "10",
+                "routing": {
+                    "allocation": {
+                        "include": {
+                            "_tier_preference": "data_content"
+                        }
+                    }
+                },
+                "number_of_shards": "1",
+                "provided_name": "myproduct0444",
+                "creation_date": "1695888778829",
+                "analysis": {
+                    "analyzer": {
+                        "my_ngram_analyzer": {
+                            "tokenizer": "my_ngram_tokenizer"
+                        }
+                    },
+                    "tokenizer": {
+                        "my_ngram_tokenizer": {
+                            "type": "nGram",
+                            "min_gram": "1",
+                            "max_gram": "10"
+                        }
+                    }
+                },
+                "number_of_replicas": "1",
+                "uuid": "hNx9DyXlQ2iZI3ovrHPZwQ",
+                "version": {
+                    "created": "7170099"
+                }
+            }
+        }
+    }
+}
+
+
+# 수정시 close를 해야한다 
+http://localhost:9200/myproduct0444/_close
+
+
+{
+    "acknowledged": true,
+    "shards_acknowledged": true,
+    "indices": {
+        "myproduct0444": {
+            "closed": true
+        }
+    }
+}
+
+
+# 수정하기 max_ngram_diff를 20으로
+put http://localhost:9200/myproduct0444/_settings
+
+{
+    "settings": {
+        "analysis": {
+            "analyzer": {
+                "my_ngram_analyzer": {
+                    "tokenizer": "my_ngram_tokenizer"
+                }
+            },
+            "tokenizer": {
+                "my_ngram_tokenizer": {
+                    "type": "nGram",
+                    "min_gram": "1",
+                    "max_gram": "10"
+                }
+            }
+        },
+        "max_ngram_diff": "20"
+    }
+}
+
+{
+    "acknowledged": true
+}
+
+
+# 다시 열기 
+post http://localhost:9200/myproduct0444/_open
+{
+    "acknowledged": true,
+    "shards_acknowledged": true
+}
+
+
+# 해보기
+post http://localhost:9200/myproduct0444/_analyze
+{
+    "analyzer": "my_ngram_analyzer",
+    "text": "안녕하세요. Bestshop입니다! Best"
+}
+
+{
+    "tokens": [
+        {
+            "token": "안",
+            "start_offset": 0,
+            "end_offset": 1,
+            "type": "word",
+            "position": 0
+        },
+        {
+            "token": "안녕",
+            "start_offset": 0,
+            "end_offset": 2,
+            "type": "word",
+            "position": 1
+        },
+        {
+            "token": "안녕하",
+            "start_offset": 0,
+            "end_offset": 3,
+            "type": "word",
+            "position": 2
+        },
+        {
+            "token": "안녕하세",
+            "start_offset": 0,
+            "end_offset": 4,
+            "type": "word",
+            "position": 3
+        },
+        {
+            "token": "안녕하세요",
+            "start_offset": 0,
+            "end_offset": 5,
+            "type": "word",
+            "position": 4
+        },
+        {
+            "token": "안녕하세요.",
+            "start_offset": 0,
+            "end_offset": 6,
+            "type": "word",
+            "position": 5
+        },
+        {
+            "token": "안녕하세요. ",
+            "start_offset": 0,
+            "end_offset": 7,
+            "type": "word",
+            "position": 6
+        },
+        {
+            "token": "안녕하세요. B",
+            "start_offset": 0,
+            "end_offset": 8,
+            "type": "word",
+            "position": 7
+        },
+        {
+            "token": "안녕하세요. Be",
+            "start_offset": 0,
+            "end_offset": 9,
+            "type": "word",
+            "position": 8
+        },
+        {
+            "token": "안녕하세요. Bes",
+            "start_offset": 0,
+            "end_offset": 10,
+            "type": "word",
+            "position": 9
+        },
+        {
+            "token": "녕",
+            "start_offset": 1,
+            "end_offset": 2,
+            "type": "word",
+            "position": 10
+        },
+        {
+            "token": "녕하",
+            "start_offset": 1,
+            "end_offset": 3,
+            "type": "word",
+            "position": 11
+        },
+        {
+            "token": "녕하세",
+            "start_offset": 1,
+            "end_offset": 4,
+            "type": "word",
+            "position": 12
+        },
+        {
+            "token": "녕하세요",
+            "start_offset": 1,
+            "end_offset": 5,
+            "type": "word",
+            "position": 13
+        },
+        {
+            "token": "녕하세요.",
+            "start_offset": 1,
+            "end_offset": 6,
+            "type": "word",
+            "position": 14
+        },
+        {
+            "token": "녕하세요. ",
+            "start_offset": 1,
+            "end_offset": 7,
+            "type": "word",
+            "position": 15
+        },
+        {
+            "token": "녕하세요. B",
+            "start_offset": 1,
+            "end_offset": 8,
+            "type": "word",
+            "position": 16
+        },
+        {
+            "token": "녕하세요. Be",
+            "start_offset": 1,
+            "end_offset": 9,
+            "type": "word",
+            "position": 17
+        },
+        {
+            "token": "녕하세요. Bes",
+            "start_offset": 1,
+            "end_offset": 10,
+            "type": "word",
+            "position": 18
+        },
+        {
+            "token": "녕하세요. Best",
+            "start_offset": 1,
+            "end_offset": 11,
+            "type": "word",
+            "position": 19
+        },
+        {
+            "token": "하",
+            "start_offset": 2,
+            "end_offset": 3,
+            "type": "word",
+            "position": 20
+        },
+        {
+            "token": "하세",
+            "start_offset": 2,
+            "end_offset": 4,
+            "type": "word",
+            "position": 21
+        },
+        {
+            "token": "하세요",
+            "start_offset": 2,
+            "end_offset": 5,
+            "type": "word",
+            "position": 22
+        },
+        {
+            "token": "하세요.",
+            "start_offset": 2,
+            "end_offset": 6,
+            "type": "word",
+            "position": 23
+        },
+        {
+            "token": "하세요. ",
+            "start_offset": 2,
+            "end_offset": 7,
+            "type": "word",
+            "position": 24
+        },
+        {
+            "token": "하세요. B",
+            "start_offset": 2,
+            "end_offset": 8,
+            "type": "word",
+            "position": 25
+        },
+        {
+            "token": "하세요. Be",
+            "start_offset": 2,
+            "end_offset": 9,
+            "type": "word",
+            "position": 26
+        },
+        {
+            "token": "하세요. Bes",
+            "start_offset": 2,
+            "end_offset": 10,
+            "type": "word",
+            "position": 27
+        },
+        {
+            "token": "하세요. Best",
+            "start_offset": 2,
+            "end_offset": 11,
+            "type": "word",
+            "position": 28
+        },
+        {
+            "token": "하세요. Bests",
+            "start_offset": 2,
+            "end_offset": 12,
+            "type": "word",
+            "position": 29
+        },
+        {
+            "token": "세",
+            "start_offset": 3,
+            "end_offset": 4,
+            "type": "word",
+            "position": 30
+        },
+        {
+            "token": "세요",
+            "start_offset": 3,
+            "end_offset": 5,
+            "type": "word",
+            "position": 31
+        },
+        {
+            "token": "세요.",
+            "start_offset": 3,
+            "end_offset": 6,
+            "type": "word",
+            "position": 32
+        },
+        {
+            "token": "세요. ",
+            "start_offset": 3,
+            "end_offset": 7,
+            "type": "word",
+            "position": 33
+        },
+        {
+            "token": "세요. B",
+            "start_offset": 3,
+            "end_offset": 8,
+            "type": "word",
+            "position": 34
+        },
+        {
+            "token": "세요. Be",
+            "start_offset": 3,
+            "end_offset": 9,
+            "type": "word",
+            "position": 35
+        },
+        {
+            "token": "세요. Bes",
+            "start_offset": 3,
+            "end_offset": 10,
+            "type": "word",
+            "position": 36
+        },
+        {
+            "token": "세요. Best",
+            "start_offset": 3,
+            "end_offset": 11,
+            "type": "word",
+            "position": 37
+        },
+        {
+            "token": "세요. Bests",
+            "start_offset": 3,
+            "end_offset": 12,
+            "type": "word",
+            "position": 38
+        },
+        {
+            "token": "세요. Bestsh",
+            "start_offset": 3,
+            "end_offset": 13,
+            "type": "word",
+            "position": 39
+        },
+        {
+            "token": "요",
+            "start_offset": 4,
+            "end_offset": 5,
+            "type": "word",
+            "position": 40
+        },
+        {
+            "token": "요.",
+            "start_offset": 4,
+            "end_offset": 6,
+            "type": "word",
+            "position": 41
+        },
+        {
+            "token": "요. ",
+            "start_offset": 4,
+            "end_offset": 7,
+            "type": "word",
+            "position": 42
+        },
+        {
+            "token": "요. B",
+            "start_offset": 4,
+            "end_offset": 8,
+            "type": "word",
+            "position": 43
+        },
+        {
+            "token": "요. Be",
+            "start_offset": 4,
+            "end_offset": 9,
+            "type": "word",
+            "position": 44
+        },
+        {
+            "token": "요. Bes",
+            "start_offset": 4,
+            "end_offset": 10,
+            "type": "word",
+            "position": 45
+        },
+        {
+            "token": "요. Best",
+            "start_offset": 4,
+            "end_offset": 11,
+            "type": "word",
+            "position": 46
+        },
+        {
+            "token": "요. Bests",
+            "start_offset": 4,
+            "end_offset": 12,
+            "type": "word",
+            "position": 47
+        },
+        {
+            "token": "요. Bestsh",
+            "start_offset": 4,
+            "end_offset": 13,
+            "type": "word",
+            "position": 48
+        },
+        {
+            "token": "요. Bestsho",
+            "start_offset": 4,
+            "end_offset": 14,
+            "type": "word",
+            "position": 49
+        },
+        {
+            "token": ".",
+            "start_offset": 5,
+            "end_offset": 6,
+            "type": "word",
+            "position": 50
+        },
+        {
+            "token": ". ",
+            "start_offset": 5,
+            "end_offset": 7,
+            "type": "word",
+            "position": 51
+        },
+        {
+            "token": ". B",
+            "start_offset": 5,
+            "end_offset": 8,
+            "type": "word",
+            "position": 52
+        },
+        {
+            "token": ". Be",
+            "start_offset": 5,
+            "end_offset": 9,
+            "type": "word",
+            "position": 53
+        },
+        {
+            "token": ". Bes",
+            "start_offset": 5,
+            "end_offset": 10,
+            "type": "word",
+            "position": 54
+        },
+        {
+            "token": ". Best",
+            "start_offset": 5,
+            "end_offset": 11,
+            "type": "word",
+            "position": 55
+        },
+        {
+            "token": ". Bests",
+            "start_offset": 5,
+            "end_offset": 12,
+            "type": "word",
+            "position": 56
+        },
+        {
+            "token": ". Bestsh",
+            "start_offset": 5,
+            "end_offset": 13,
+            "type": "word",
+            "position": 57
+        },
+        {
+            "token": ". Bestsho",
+            "start_offset": 5,
+            "end_offset": 14,
+            "type": "word",
+            "position": 58
+        },
+        {
+            "token": ". Bestshop",
+            "start_offset": 5,
+            "end_offset": 15,
+            "type": "word",
+            "position": 59
+        },
+        {
+            "token": " ",
+            "start_offset": 6,
+            "end_offset": 7,
+            "type": "word",
+            "position": 60
+        },
+        {
+            "token": " B",
+            "start_offset": 6,
+            "end_offset": 8,
+            "type": "word",
+            "position": 61
+        },
+        {
+            "token": " Be",
+            "start_offset": 6,
+            "end_offset": 9,
+            "type": "word",
+            "position": 62
+        },
+        {
+            "token": " Bes",
+            "start_offset": 6,
+            "end_offset": 10,
+            "type": "word",
+            "position": 63
+        },
+        {
+            "token": " Best",
+            "start_offset": 6,
+            "end_offset": 11,
+            "type": "word",
+            "position": 64
+        },
+        {
+            "token": " Bests",
+            "start_offset": 6,
+            "end_offset": 12,
+            "type": "word",
+            "position": 65
+        },
+        {
+            "token": " Bestsh",
+            "start_offset": 6,
+            "end_offset": 13,
+            "type": "word",
+            "position": 66
+        },
+        {
+            "token": " Bestsho",
+            "start_offset": 6,
+            "end_offset": 14,
+            "type": "word",
+            "position": 67
+        },
+        {
+            "token": " Bestshop",
+            "start_offset": 6,
+            "end_offset": 15,
+            "type": "word",
+            "position": 68
+        },
+        {
+            "token": " Bestshop입",
+            "start_offset": 6,
+            "end_offset": 16,
+            "type": "word",
+            "position": 69
+        },
+        {
+            "token": "B",
+            "start_offset": 7,
+            "end_offset": 8,
+            "type": "word",
+            "position": 70
+        },
+        {
+            "token": "Be",
+            "start_offset": 7,
+            "end_offset": 9,
+            "type": "word",
+            "position": 71
+        },
+        {
+            "token": "Bes",
+            "start_offset": 7,
+            "end_offset": 10,
+            "type": "word",
+            "position": 72
+        },
+        {
+            "token": "Best",
+            "start_offset": 7,
+            "end_offset": 11,
+            "type": "word",
+            "position": 73
+        },
+        {
+            "token": "Bests",
+            "start_offset": 7,
+            "end_offset": 12,
+            "type": "word",
+            "position": 74
+        },
+        {
+            "token": "Bestsh",
+            "start_offset": 7,
+            "end_offset": 13,
+            "type": "word",
+            "position": 75
+        },
+        {
+            "token": "Bestsho",
+            "start_offset": 7,
+            "end_offset": 14,
+            "type": "word",
+            "position": 76
+        },
+        {
+            "token": "Bestshop",
+            "start_offset": 7,
+            "end_offset": 15,
+            "type": "word",
+            "position": 77
+        },
+        {
+            "token": "Bestshop입",
+            "start_offset": 7,
+            "end_offset": 16,
+            "type": "word",
+            "position": 78
+        },
+        {
+            "token": "Bestshop입니",
+            "start_offset": 7,
+            "end_offset": 17,
+            "type": "word",
+            "position": 79
+        },
+        {
+            "token": "e",
+            "start_offset": 8,
+            "end_offset": 9,
+            "type": "word",
+            "position": 80
+        },
+        {
+            "token": "es",
+            "start_offset": 8,
+            "end_offset": 10,
+            "type": "word",
+            "position": 81
+        },
+        {
+            "token": "est",
+            "start_offset": 8,
+            "end_offset": 11,
+            "type": "word",
+            "position": 82
+        },
+        {
+            "token": "ests",
+            "start_offset": 8,
+            "end_offset": 12,
+            "type": "word",
+            "position": 83
+        },
+        {
+            "token": "estsh",
+            "start_offset": 8,
+            "end_offset": 13,
+            "type": "word",
+            "position": 84
+        },
+        {
+            "token": "estsho",
+            "start_offset": 8,
+            "end_offset": 14,
+            "type": "word",
+            "position": 85
+        },
+        {
+            "token": "estshop",
+            "start_offset": 8,
+            "end_offset": 15,
+            "type": "word",
+            "position": 86
+        },
+        {
+            "token": "estshop입",
+            "start_offset": 8,
+            "end_offset": 16,
+            "type": "word",
+            "position": 87
+        },
+        {
+            "token": "estshop입니",
+            "start_offset": 8,
+            "end_offset": 17,
+            "type": "word",
+            "position": 88
+        },
+        {
+            "token": "estshop입니다",
+            "start_offset": 8,
+            "end_offset": 18,
+            "type": "word",
+            "position": 89
+        },
+        {
+            "token": "s",
+            "start_offset": 9,
+            "end_offset": 10,
+            "type": "word",
+            "position": 90
+        },
+        {
+            "token": "st",
+            "start_offset": 9,
+            "end_offset": 11,
+            "type": "word",
+            "position": 91
+        },
+        {
+            "token": "sts",
+            "start_offset": 9,
+            "end_offset": 12,
+            "type": "word",
+            "position": 92
+        },
+        {
+            "token": "stsh",
+            "start_offset": 9,
+            "end_offset": 13,
+            "type": "word",
+            "position": 93
+        },
+        {
+            "token": "stsho",
+            "start_offset": 9,
+            "end_offset": 14,
+            "type": "word",
+            "position": 94
+        },
+        {
+            "token": "stshop",
+            "start_offset": 9,
+            "end_offset": 15,
+            "type": "word",
+            "position": 95
+        },
+        {
+            "token": "stshop입",
+            "start_offset": 9,
+            "end_offset": 16,
+            "type": "word",
+            "position": 96
+        },
+        {
+            "token": "stshop입니",
+            "start_offset": 9,
+            "end_offset": 17,
+            "type": "word",
+            "position": 97
+        },
+        {
+            "token": "stshop입니다",
+            "start_offset": 9,
+            "end_offset": 18,
+            "type": "word",
+            "position": 98
+        },
+        {
+            "token": "stshop입니다!",
+            "start_offset": 9,
+            "end_offset": 19,
+            "type": "word",
+            "position": 99
+        },
+        {
+            "token": "t",
+            "start_offset": 10,
+            "end_offset": 11,
+            "type": "word",
+            "position": 100
+        },
+        {
+            "token": "ts",
+            "start_offset": 10,
+            "end_offset": 12,
+            "type": "word",
+            "position": 101
+        },
+        {
+            "token": "tsh",
+            "start_offset": 10,
+            "end_offset": 13,
+            "type": "word",
+            "position": 102
+        },
+        {
+            "token": "tsho",
+            "start_offset": 10,
+            "end_offset": 14,
+            "type": "word",
+            "position": 103
+        },
+        {
+            "token": "tshop",
+            "start_offset": 10,
+            "end_offset": 15,
+            "type": "word",
+            "position": 104
+        },
+        {
+            "token": "tshop입",
+            "start_offset": 10,
+            "end_offset": 16,
+            "type": "word",
+            "position": 105
+        },
+        {
+            "token": "tshop입니",
+            "start_offset": 10,
+            "end_offset": 17,
+            "type": "word",
+            "position": 106
+        },
+        {
+            "token": "tshop입니다",
+            "start_offset": 10,
+            "end_offset": 18,
+            "type": "word",
+            "position": 107
+        },
+        {
+            "token": "tshop입니다!",
+            "start_offset": 10,
+            "end_offset": 19,
+            "type": "word",
+            "position": 108
+        },
+        {
+            "token": "tshop입니다! ",
+            "start_offset": 10,
+            "end_offset": 20,
+            "type": "word",
+            "position": 109
+        },
+        {
+            "token": "s",
+            "start_offset": 11,
+            "end_offset": 12,
+            "type": "word",
+            "position": 110
+        },
+        {
+            "token": "sh",
+            "start_offset": 11,
+            "end_offset": 13,
+            "type": "word",
+            "position": 111
+        },
+        {
+            "token": "sho",
+            "start_offset": 11,
+            "end_offset": 14,
+            "type": "word",
+            "position": 112
+        },
+        {
+            "token": "shop",
+            "start_offset": 11,
+            "end_offset": 15,
+            "type": "word",
+            "position": 113
+        },
+        {
+            "token": "shop입",
+            "start_offset": 11,
+            "end_offset": 16,
+            "type": "word",
+            "position": 114
+        },
+        {
+            "token": "shop입니",
+            "start_offset": 11,
+            "end_offset": 17,
+            "type": "word",
+            "position": 115
+        },
+        {
+            "token": "shop입니다",
+            "start_offset": 11,
+            "end_offset": 18,
+            "type": "word",
+            "position": 116
+        },
+        {
+            "token": "shop입니다!",
+            "start_offset": 11,
+            "end_offset": 19,
+            "type": "word",
+            "position": 117
+        },
+        {
+            "token": "shop입니다! ",
+            "start_offset": 11,
+            "end_offset": 20,
+            "type": "word",
+            "position": 118
+        },
+        {
+            "token": "shop입니다! B",
+            "start_offset": 11,
+            "end_offset": 21,
+            "type": "word",
+            "position": 119
+        },
+        {
+            "token": "h",
+            "start_offset": 12,
+            "end_offset": 13,
+            "type": "word",
+            "position": 120
+        },
+        {
+            "token": "ho",
+            "start_offset": 12,
+            "end_offset": 14,
+            "type": "word",
+            "position": 121
+        },
+        {
+            "token": "hop",
+            "start_offset": 12,
+            "end_offset": 15,
+            "type": "word",
+            "position": 122
+        },
+        {
+            "token": "hop입",
+            "start_offset": 12,
+            "end_offset": 16,
+            "type": "word",
+            "position": 123
+        },
+        {
+            "token": "hop입니",
+            "start_offset": 12,
+            "end_offset": 17,
+            "type": "word",
+            "position": 124
+        },
+        {
+            "token": "hop입니다",
+            "start_offset": 12,
+            "end_offset": 18,
+            "type": "word",
+            "position": 125
+        },
+        {
+            "token": "hop입니다!",
+            "start_offset": 12,
+            "end_offset": 19,
+            "type": "word",
+            "position": 126
+        },
+        {
+            "token": "hop입니다! ",
+            "start_offset": 12,
+            "end_offset": 20,
+            "type": "word",
+            "position": 127
+        },
+        {
+            "token": "hop입니다! B",
+            "start_offset": 12,
+            "end_offset": 21,
+            "type": "word",
+            "position": 128
+        },
+        {
+            "token": "hop입니다! Be",
+            "start_offset": 12,
+            "end_offset": 22,
+            "type": "word",
+            "position": 129
+        },
+        {
+            "token": "o",
+            "start_offset": 13,
+            "end_offset": 14,
+            "type": "word",
+            "position": 130
+        },
+        {
+            "token": "op",
+            "start_offset": 13,
+            "end_offset": 15,
+            "type": "word",
+            "position": 131
+        },
+        {
+            "token": "op입",
+            "start_offset": 13,
+            "end_offset": 16,
+            "type": "word",
+            "position": 132
+        },
+        {
+            "token": "op입니",
+            "start_offset": 13,
+            "end_offset": 17,
+            "type": "word",
+            "position": 133
+        },
+        {
+            "token": "op입니다",
+            "start_offset": 13,
+            "end_offset": 18,
+            "type": "word",
+            "position": 134
+        },
+        {
+            "token": "op입니다!",
+            "start_offset": 13,
+            "end_offset": 19,
+            "type": "word",
+            "position": 135
+        },
+        {
+            "token": "op입니다! ",
+            "start_offset": 13,
+            "end_offset": 20,
+            "type": "word",
+            "position": 136
+        },
+        {
+            "token": "op입니다! B",
+            "start_offset": 13,
+            "end_offset": 21,
+            "type": "word",
+            "position": 137
+        },
+        {
+            "token": "op입니다! Be",
+            "start_offset": 13,
+            "end_offset": 22,
+            "type": "word",
+            "position": 138
+        },
+        {
+            "token": "op입니다! Bes",
+            "start_offset": 13,
+            "end_offset": 23,
+            "type": "word",
+            "position": 139
+        },
+        {
+            "token": "p",
+            "start_offset": 14,
+            "end_offset": 15,
+            "type": "word",
+            "position": 140
+        },
+        {
+            "token": "p입",
+            "start_offset": 14,
+            "end_offset": 16,
+            "type": "word",
+            "position": 141
+        },
+        {
+            "token": "p입니",
+            "start_offset": 14,
+            "end_offset": 17,
+            "type": "word",
+            "position": 142
+        },
+        {
+            "token": "p입니다",
+            "start_offset": 14,
+            "end_offset": 18,
+            "type": "word",
+            "position": 143
+        },
+        {
+            "token": "p입니다!",
+            "start_offset": 14,
+            "end_offset": 19,
+            "type": "word",
+            "position": 144
+        },
+        {
+            "token": "p입니다! ",
+            "start_offset": 14,
+            "end_offset": 20,
+            "type": "word",
+            "position": 145
+        },
+        {
+            "token": "p입니다! B",
+            "start_offset": 14,
+            "end_offset": 21,
+            "type": "word",
+            "position": 146
+        },
+        {
+            "token": "p입니다! Be",
+            "start_offset": 14,
+            "end_offset": 22,
+            "type": "word",
+            "position": 147
+        },
+        {
+            "token": "p입니다! Bes",
+            "start_offset": 14,
+            "end_offset": 23,
+            "type": "word",
+            "position": 148
+        },
+        {
+            "token": "p입니다! Best",
+            "start_offset": 14,
+            "end_offset": 24,
+            "type": "word",
+            "position": 149
+        },
+        {
+            "token": "입",
+            "start_offset": 15,
+            "end_offset": 16,
+            "type": "word",
+            "position": 150
+        },
+        {
+            "token": "입니",
+            "start_offset": 15,
+            "end_offset": 17,
+            "type": "word",
+            "position": 151
+        },
+        {
+            "token": "입니다",
+            "start_offset": 15,
+            "end_offset": 18,
+            "type": "word",
+            "position": 152
+        },
+        {
+            "token": "입니다!",
+            "start_offset": 15,
+            "end_offset": 19,
+            "type": "word",
+            "position": 153
+        },
+        {
+            "token": "입니다! ",
+            "start_offset": 15,
+            "end_offset": 20,
+            "type": "word",
+            "position": 154
+        },
+        {
+            "token": "입니다! B",
+            "start_offset": 15,
+            "end_offset": 21,
+            "type": "word",
+            "position": 155
+        },
+        {
+            "token": "입니다! Be",
+            "start_offset": 15,
+            "end_offset": 22,
+            "type": "word",
+            "position": 156
+        },
+        {
+            "token": "입니다! Bes",
+            "start_offset": 15,
+            "end_offset": 23,
+            "type": "word",
+            "position": 157
+        },
+        {
+            "token": "입니다! Best",
+            "start_offset": 15,
+            "end_offset": 24,
+            "type": "word",
+            "position": 158
+        },
+        {
+            "token": "니",
+            "start_offset": 16,
+            "end_offset": 17,
+            "type": "word",
+            "position": 159
+        },
+        {
+            "token": "니다",
+            "start_offset": 16,
+            "end_offset": 18,
+            "type": "word",
+            "position": 160
+        },
+        {
+            "token": "니다!",
+            "start_offset": 16,
+            "end_offset": 19,
+            "type": "word",
+            "position": 161
+        },
+        {
+            "token": "니다! ",
+            "start_offset": 16,
+            "end_offset": 20,
+            "type": "word",
+            "position": 162
+        },
+        {
+            "token": "니다! B",
+            "start_offset": 16,
+            "end_offset": 21,
+            "type": "word",
+            "position": 163
+        },
+        {
+            "token": "니다! Be",
+            "start_offset": 16,
+            "end_offset": 22,
+            "type": "word",
+            "position": 164
+        },
+        {
+            "token": "니다! Bes",
+            "start_offset": 16,
+            "end_offset": 23,
+            "type": "word",
+            "position": 165
+        },
+        {
+            "token": "니다! Best",
+            "start_offset": 16,
+            "end_offset": 24,
+            "type": "word",
+            "position": 166
+        },
+        {
+            "token": "다",
+            "start_offset": 17,
+            "end_offset": 18,
+            "type": "word",
+            "position": 167
+        },
+        {
+            "token": "다!",
+            "start_offset": 17,
+            "end_offset": 19,
+            "type": "word",
+            "position": 168
+        },
+        {
+            "token": "다! ",
+            "start_offset": 17,
+            "end_offset": 20,
+            "type": "word",
+            "position": 169
+        },
+        {
+            "token": "다! B",
+            "start_offset": 17,
+            "end_offset": 21,
+            "type": "word",
+            "position": 170
+        },
+        {
+            "token": "다! Be",
+            "start_offset": 17,
+            "end_offset": 22,
+            "type": "word",
+            "position": 171
+        },
+        {
+            "token": "다! Bes",
+            "start_offset": 17,
+            "end_offset": 23,
+            "type": "word",
+            "position": 172
+        },
+        {
+            "token": "다! Best",
+            "start_offset": 17,
+            "end_offset": 24,
+            "type": "word",
+            "position": 173
+        },
+        {
+            "token": "!",
+            "start_offset": 18,
+            "end_offset": 19,
+            "type": "word",
+            "position": 174
+        },
+        {
+            "token": "! ",
+            "start_offset": 18,
+            "end_offset": 20,
+            "type": "word",
+            "position": 175
+        },
+        {
+            "token": "! B",
+            "start_offset": 18,
+            "end_offset": 21,
+            "type": "word",
+            "position": 176
+        },
+        {
+            "token": "! Be",
+            "start_offset": 18,
+            "end_offset": 22,
+            "type": "word",
+            "position": 177
+        },
+        {
+            "token": "! Bes",
+            "start_offset": 18,
+            "end_offset": 23,
+            "type": "word",
+            "position": 178
+        },
+        {
+            "token": "! Best",
+            "start_offset": 18,
+            "end_offset": 24,
+            "type": "word",
+            "position": 179
+        },
+        {
+            "token": " ",
+            "start_offset": 19,
+            "end_offset": 20,
+            "type": "word",
+            "position": 180
+        },
+        {
+            "token": " B",
+            "start_offset": 19,
+            "end_offset": 21,
+            "type": "word",
+            "position": 181
+        },
+        {
+            "token": " Be",
+            "start_offset": 19,
+            "end_offset": 22,
+            "type": "word",
+            "position": 182
+        },
+        {
+            "token": " Bes",
+            "start_offset": 19,
+            "end_offset": 23,
+            "type": "word",
+            "position": 183
+        },
+        {
+            "token": " Best",
+            "start_offset": 19,
+            "end_offset": 24,
+            "type": "word",
+            "position": 184
+        },
+        {
+            "token": "B",
+            "start_offset": 20,
+            "end_offset": 21,
+            "type": "word",
+            "position": 185
+        },
+        {
+            "token": "Be",
+            "start_offset": 20,
+            "end_offset": 22,
+            "type": "word",
+            "position": 186
+        },
+        {
+            "token": "Bes",
+            "start_offset": 20,
+            "end_offset": 23,
+            "type": "word",
+            "position": 187
+        },
+        {
+            "token": "Best",
+            "start_offset": 20,
+            "end_offset": 24,
+            "type": "word",
+            "position": 188
+        },
+        {
+            "token": "e",
+            "start_offset": 21,
+            "end_offset": 22,
+            "type": "word",
+            "position": 189
+        },
+        {
+            "token": "es",
+            "start_offset": 21,
+            "end_offset": 23,
+            "type": "word",
+            "position": 190
+        },
+        {
+            "token": "est",
+            "start_offset": 21,
+            "end_offset": 24,
+            "type": "word",
+            "position": 191
+        },
+        {
+            "token": "s",
+            "start_offset": 22,
+            "end_offset": 23,
+            "type": "word",
+            "position": 192
+        },
+        {
+            "token": "st",
+            "start_offset": 22,
+            "end_offset": 24,
+            "type": "word",
+            "position": 193
+        },
+        {
+            "token": "t",
+            "start_offset": 23,
+            "end_offset": 24,
+            "type": "word",
+            "position": 194
+        }
+    ]
+}
